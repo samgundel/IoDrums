@@ -10,7 +10,8 @@ class XDKSerialPortReader : public XDKReader {
 public:
     explicit XDKSerialPortReader(const std::string& serialPort);
     
-    void setReceiver(const XDKReceiverCallback& callback) override;
+    void setGiroReceiver(const XDKGiroCallback& callback) override;
+    void setAccelerationReceiver(const XDKAccelerationCallback& callback) override;
     
     /**
      * Start reading from the Serial Port and send message to the receiver (if available)
@@ -18,10 +19,11 @@ public:
     void start();
 
 private:
-    XDKGiro parse(const std::string& row, const char separator = ' ');
+    void parse(const std::string& row, const char separator = ' ');
     
     std::string m_serialPort;
-    XDKReceiverCallback m_callback;
+    XDKGiroCallback m_giroCallback;
+    XDKAccelerationCallback m_accelerationCallback;
 };
 
 } // namespace xdk

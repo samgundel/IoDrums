@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <vector>
-#include <mutex>
 
 #include <RtMidi.h>
 
@@ -25,7 +24,6 @@ private:
     unsigned int m_port = 2;              //!< Midi Port we are connecting to.
     std::vector<unsigned char> message;   //!< Midi Message 
     std::unique_ptr<RtMidiOut> m_midiOut; //!< Midi Connector;
-    std::mutex m_mutex;
 };
 
 } // namespace player

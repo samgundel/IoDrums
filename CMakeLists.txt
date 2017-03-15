@@ -16,8 +16,9 @@ include_directories(${RTMIDI_INCLUDE_DIRS})
 
 # Components
 set(PLAYER src/player/MidiPlayer.cpp)
+set(ML     src/ml/MSEEstimator.cpp)
 set(XDK    src/xdk/XDKSerialPortReader.cpp)
-set(SRC    src/main.cpp ${PLAYER} ${XDK})
+set(SRC    src/main.cpp ${PLAYER} ${ML} ${XDK})
 
 add_executable(${PROJECT_NAME} ${SRC})
 target_link_libraries(${PROJECT_NAME} ${RTMIDI_LIBRARIES} Threads::Threads)

@@ -34,13 +34,11 @@ void MidiPlayer::playNote(DrumsNote note, int msecs, unsigned char intensity) {
 }
 
 void MidiPlayer::startDrumsNote(DrumsNote note, int msecs, unsigned char intensity) {
-    std::lock_guard<std::mutex> lock(m_mutex);
     std::vector<unsigned char> message = {NOTE_ON, note, intensity};
     m_midiOut->sendMessage(&message);
 }
 
 void MidiPlayer::stopDrumsNote(DrumsNote note, int msecs, unsigned char intensity) {
-    std::lock_guard<std::mutex> lock(m_mutex);
     std::vector<unsigned char> message = {NOTE_OFF, note, intensity};
     m_midiOut->sendMessage(&message);
 }

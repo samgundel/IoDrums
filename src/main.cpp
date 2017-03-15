@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <thread>
 
 #include "player/Notes.hpp"
 #include "player/MidiPlayer.hpp"
@@ -12,11 +13,22 @@ int main(int argc, char**argv) {
     player::MidiPlayer player;
     player.initialize();
 
-    auto xdkReader = std::make_shared<xdk::XDKSerialPortReader>("/dev/ttyACM0");
-    auto estimator = std::make_shared<ml::MSEEstimator>();
-    estimator->setGestureReceiver([&player](){ player.playNote(player::DrumsNote::PLATES); });
-    xdkReader->setGiroReceiver([&estimator](const auto& ...args){ estimator->pushGiroEntry(args...); });
-    xdkReader->setAccelerationReceiver([&estimator](const auto& ...args){ estimator->pushAccelerationEntry(args...);  });
-    xdkReader->start();
+    auto xdkReaderLeft  = std::make_shared<xdk::XDKSerialPortReader>("/dev/ttyACM0");
+    auto xdkReaderRight = std::make_shared<xdk::XDKSerialPortReader>("/dev/ttyACM1");
+
+    auto estimatorLeft = std::make_shared<ml::MSEEstimator>();
+    auto estimatorRight = std::make_shared<ml::MSEEstimator>();
+
+    estimatorLeft->setGestureReceiver([&player](){ player.playNote(player::DrumsNote::L_DRUM); });
+    estimatorRight->setGestureReceiver([&player](){ player.playNote(player::DrumsNote::PLATES); });
+
+    xdkReaderLeft->setGiroReceiver([&estimatorLeft](const auto& ...args){ estimatorLeft->pushGiroEntry(args...); });
+    xdkReaderLeft->setAccelerationReceiver([&estimatorLeft](const auto& ...args){ estimatorLeft->pushAccelerationEntry(args...); });
+
+    xdkReaderRight->setGiroReceiver([&estimatorRight](const auto& ...args){ estimatorRight->pushGiroEntry(args...); });
+    xdkReaderRight->setAccelerationReceiver([&estimatorRight](const auto& ...args){ estimatorRight->pushAccelerationEntry(args...); });
+
+    std::thread([&xdkReaderLeft](){ xdkReaderLeft->start(); }).detach();
+    xdkReaderRight->start();
     return 0;
 }

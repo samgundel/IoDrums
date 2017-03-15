@@ -1,0 +1,12 @@
+{
+    "version": "0.1.0",
+    "command": "build/IoDrums",
+    "isShellCommand": true,
+    "args": [""],
+    "showOutput": "always",
+    "tasks": [
+        {
+            "taskName": "IoDrums"
+        }
+    ]
+}

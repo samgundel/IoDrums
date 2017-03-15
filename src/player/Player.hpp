@@ -17,7 +17,9 @@ virtual void initialize() = 0;
 /**
  * Play a midi note in a fire and forget fashion.
  */
-virtual void playDrumsNote(DrumsNote note, int msecs = 500, unsigned char intensity = 60) = 0;
+virtual void startDrumsNote(DrumsNote note, int msecs = 500, unsigned char intensity = 60) = 0;
+virtual void stopDrumsNote(DrumsNote note, int msecs = 500, unsigned char intensity = 60) = 0;
+virtual void playNote(DrumsNote note, int msecs = 500, unsigned char intensity = 60) = 0;
 
 };
 

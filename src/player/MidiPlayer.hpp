@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <mutex>
 
 #include <RtMidi.h>
 
@@ -15,13 +16,16 @@ public:
 
 void initialize() override;
 
-void playDrumsNote(DrumsNote note, int msecs = 500, unsigned char intensity = 60) override;
+void startDrumsNote(DrumsNote note, int msecs = 500, unsigned char intensity = 60) override;
+void stopDrumsNote(DrumsNote note, int msecs = 500, unsigned char intensity = 60) override;
+void playNote(DrumsNote note, int msecs = 500, unsigned char intensity = 60) override;
 
 private:
     bool m_connected = false;             //!< The state of the player.
     unsigned int m_port = 2;              //!< Midi Port we are connecting to.
     std::vector<unsigned char> message;   //!< Midi Message 
     std::unique_ptr<RtMidiOut> m_midiOut; //!< Midi Connector;
+    std::mutex m_mutex;
 };
 
 } // namespace player

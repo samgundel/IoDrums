@@ -56,26 +56,21 @@ void XDKSerialPortReader::start() {
 void XDKSerialPortReader::parse(const std::string& row, const char separator) {
     std::vector<std::string> values;
     split(row, values, separator);
-    if (values.size() == 4) {
-        if (values[0][1] == 'A') {
-            XDKAcceleration acceleration;
-            acceleration.x = std::atof(values[1].c_str());
-            acceleration.y = std::atof(values[2].c_str());
-            acceleration.z = std::atof(values[3].c_str());
-            m_accelerationCallback(acceleration);
-        } else {
-            XDKGiro giro;
-            giro.yaw = std::atof(values[1].c_str());
-            giro.pitch = std::atof(values[2].c_str());
-            giro.roll = std::atof(values[3].c_str());
-            m_giroCallback(giro);
-        }
-    } 
+
+    if (values[0][1] == 'A') {
+        XDKAcceleration acceleration;
+        acceleration.x = std::atof(values[1].c_str());
+        acceleration.y = std::atof(values[2].c_str());
+        acceleration.z = std::atof(values[3].c_str());
+        m_accelerationCallback(acceleration);
+    } else if (values[0][1] == 'B'){
+        m_modeCallback(values[1][1] == '1');
+    }
 }
 
-void XDKSerialPortReader::setGiroReceiver(const XDKGiroCallback& callback)
+void XDKSerialPortReader::setModeReceiver(const XDKModeCallback& callback)
 {
-    m_giroCallback = callback;
+    m_modeCallback = callback;
 }
 
 void XDKSerialPortReader::setAccelerationReceiver(const XDKAccelerationCallback& callback)

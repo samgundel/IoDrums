@@ -10,7 +10,7 @@ class XDKSerialPortReader : public XDKReader {
 public:
     explicit XDKSerialPortReader(const std::string& serialPort);
     
-    void setGiroReceiver(const XDKGiroCallback& callback) override;
+    void setModeReceiver(const XDKModeCallback& callback) override;
     void setAccelerationReceiver(const XDKAccelerationCallback& callback) override;
     
     /**
@@ -22,7 +22,7 @@ private:
     void parse(const std::string& row, const char separator = ' ');
     
     std::string m_serialPort;
-    XDKGiroCallback m_giroCallback;
+    XDKModeCallback m_modeCallback;
     XDKAccelerationCallback m_accelerationCallback;
 };
 

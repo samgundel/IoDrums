@@ -53,12 +53,11 @@ void XDKSerialPortReader::start() {
     close(device);
 }
 
-XDKData XDKSerialPortReader::parse(const std::string& row, const char separator) {
+XDKGiro XDKSerialPortReader::parse(const std::string& row, const char separator) {
     std::vector<std::string> values;
     split(row, values, separator);
-    XDKData data;
-    if (values.size() == 4) {
-        data.pressure = std::atoi(values[0].c_str());
+    XDKGiro data;
+    if (values.size() == 3) {
         data.yaw = std::atof(values[1].c_str());
         data.pitch = std::atof(values[2].c_str());
         data.roll = std::atof(values[3].c_str());

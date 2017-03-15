@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include "xdk/XDKReader.hpp"
+#include <string>
 
 namespace iosound {
 namespace xdk {
@@ -18,7 +18,7 @@ public:
     void start();
 
 private:
-    XDKData parse(const std::string& row, const char separator = ' ');
+    XDKGiro parse(const std::string& row, const char separator = ' ');
     
     std::string m_serialPort;
     XDKReceiverCallback m_callback;

@@ -12,9 +12,9 @@ class XDKReader {
 
 public:
     using XDKModeCallback = std::function<void(bool plates)>;
-    using XDKAccelerationCallback = std::function<void(const XDKAcceleration& data)>;
+    using XDKHitCallback = std::function<void(uint8_t mode)>;
     virtual void setModeReceiver(const XDKModeCallback& callback) = 0;
-    virtual void setAccelerationReceiver(const XDKAccelerationCallback& callback) = 0;
+    virtual void setHitReceiver(const XDKHitCallback& callback) = 0;
 };
 
 } // namespace xdk

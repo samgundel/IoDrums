@@ -5,6 +5,7 @@ namespace player {
 
 enum DrumsNote {
     STICKS  = 31,
+    BUM     = 47,
     PLATES  = 57,
     L_PLATE = 44,
     L_DRUM  = 38,

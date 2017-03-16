@@ -14,8 +14,8 @@ public:
     void pushAccelerationEntry(const xdk::XDKAcceleration& giro) override;
     void setGestureReceiver(const GestureReceiver& receiver) override;
 private:
-    float m_acceptanceThreshold = 50; //!< 15**2
-    float m_rejectionThreshold = 30;  //!< 10**2
+    float m_acceptanceThreshold = 40; //!< 40
+    float m_rejectionThreshold = 10;  //!< 20
 
     GestureReceiver m_gestureReceiver;
     bool m_hit = false;

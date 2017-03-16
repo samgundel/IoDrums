@@ -11,7 +11,7 @@ public:
     explicit XDKSerialPortReader(const std::string& serialPort);
     
     void setModeReceiver(const XDKModeCallback& callback) override;
-    void setAccelerationReceiver(const XDKAccelerationCallback& callback) override;
+    void setHitReceiver(const XDKHitCallback& callback) override;
     
     /**
      * Start reading from the Serial Port and send message to the receiver (if available)
@@ -22,8 +22,9 @@ private:
     void parse(const std::string& row, const char separator = ' ');
     
     std::string m_serialPort;
+    uint8_t mode = 0;
     XDKModeCallback m_modeCallback;
-    XDKAccelerationCallback m_accelerationCallback;
+    XDKHitCallback m_hitCallback;
 };
 
 } // namespace xdk

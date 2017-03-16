@@ -16,25 +16,36 @@ int main(int argc, char**argv) {
     auto xdkReaderLeft  = std::make_shared<xdk::XDKSerialPortReader>("/dev/ttyACM1");
     auto xdkReaderRight = std::make_shared<xdk::XDKSerialPortReader>("/dev/ttyACM0");
 
-    auto estimatorLeft = std::make_shared<ml::MSEEstimator>();
-    auto estimatorRight = std::make_shared<ml::MSEEstimator>();
-
-    auto callback = [&player](bool plates){
-        if (plates) {
-            player.playNote(player::DrumsNote::PLATES);
-        } else {
-            player.playNote(player::DrumsNote::R_DRUM);
+    auto leftCallback = [&player](uint8_t mode){
+        switch (mode) {
+            case 0x11:
+                player.playNote(player::DrumsNote::BUM);
+                break;
+            case 0x21:
+                player.playNote(player::DrumsNote::L_PLATE);
+                break;
+            default:
+                player.playNote(player::DrumsNote::L_DRUM);
+                break;
         }
     };
 
-    estimatorLeft->setGestureReceiver(callback);
-    estimatorRight->setGestureReceiver(callback);
+    auto rightCallback = [&player](uint8_t mode){
+        switch (mode) {
+            case 0x11:
+                player.playNote(player::DrumsNote::PLATES);
+                break;
+            case 0x21:
+                player.playNote(player::DrumsNote::L_PLATE);
+                break;
+            default:
+                player.playNote(player::DrumsNote::R_DRUM);
+                break;
+        }
+    };
 
-    xdkReaderLeft->setAccelerationReceiver([&estimatorLeft](const auto& ...args){ estimatorLeft->pushAccelerationEntry(args...); });
-    xdkReaderRight->setAccelerationReceiver([&estimatorRight](const auto& ...args){ estimatorRight->pushAccelerationEntry(args...); });
-
-    xdkReaderLeft->setModeReceiver([&estimatorLeft](bool plates){ estimatorLeft->changeMode(plates); });
-    xdkReaderRight->setModeReceiver([&estimatorRight](bool plates){ estimatorRight->changeMode(plates); });
+    xdkReaderLeft->setHitReceiver(leftCallback);
+    xdkReaderRight->setHitReceiver(rightCallback);
 
     std::thread([&xdkReaderLeft](){ xdkReaderLeft->start(); }).detach();
     xdkReaderRight->start();

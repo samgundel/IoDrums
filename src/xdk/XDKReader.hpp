@@ -11,10 +11,10 @@ namespace xdk {
 class XDKReader {
 
 public:
-    using XDKGiroCallback = std::function<void(const XDKGiro& data)>;
-    using XDKAccelerationCallback = std::function<void(const XDKAcceleration& data)>;
-    virtual void setGiroReceiver(const XDKGiroCallback& callback) = 0;
-    virtual void setAccelerationReceiver(const XDKAccelerationCallback& callback) = 0;
+    using XDKModeCallback = std::function<void(bool plates)>;
+    using XDKHitCallback = std::function<void(uint8_t mode)>;
+    virtual void setModeReceiver(const XDKModeCallback& callback) = 0;
+    virtual void setHitReceiver(const XDKHitCallback& callback) = 0;
 };
 
 } // namespace xdk

@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include <vector>
+#include <thread>
 
 namespace {
 
@@ -42,45 +43,29 @@ XDKSerialPortReader::XDKSerialPortReader(const std::string& serialPort)
 
 void XDKSerialPortReader::start() {
     int device = open(m_serialPort.c_str(), O_RDONLY | O_NOCTTY | O_SYNC);
-    char buffer[64];
-    do
+    uint8_t command = 0;
+    while (true)
     {
-        int n = read(device, buffer, sizeof(buffer));
-        if (n > 0) {
-            parse(std::string(buffer));
+        if (read(device, &command, 1) > 0) {
+            std::cout << static_cast<uint32_t>(command) << std::endl;
+            if (command == 0x01) {
+                std::thread([this](){ m_hitCallback(mode); }).detach();
+            } else {
+                mode = command;
+            }
         }
-    } while (buffer[0] != 'X'); // 'X' means end of transmission
+    }
     close(device);
 }
 
-void XDKSerialPortReader::parse(const std::string& row, const char separator) {
-    std::vector<std::string> values;
-    split(row, values, separator);
-    if (values.size() == 4) {
-        if (values[0][1] == 'A') {
-            XDKAcceleration acceleration;
-            acceleration.x = std::atof(values[1].c_str());
-            acceleration.y = std::atof(values[2].c_str());
-            acceleration.z = std::atof(values[3].c_str());
-            m_accelerationCallback(acceleration);
-        } else {
-            XDKGiro giro;
-            giro.yaw = std::atof(values[1].c_str());
-            giro.pitch = std::atof(values[2].c_str());
-            giro.roll = std::atof(values[3].c_str());
-            m_giroCallback(giro);
-        }
-    } 
+void XDKSerialPortReader::setModeReceiver(const XDKModeCallback& callback)
+{
+    m_modeCallback = callback;
 }
 
-void XDKSerialPortReader::setGiroReceiver(const XDKGiroCallback& callback)
+void XDKSerialPortReader::setHitReceiver(const XDKHitCallback& callback)
 {
-    m_giroCallback = callback;
-}
-
-void XDKSerialPortReader::setAccelerationReceiver(const XDKAccelerationCallback& callback)
-{
-    m_accelerationCallback = callback;
+    m_hitCallback = callback;
 }
 
 } // namespace xdk

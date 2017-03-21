@@ -2,12 +2,16 @@
 #include <cmath>
 #include <iostream>
 #include <thread>
+#include <deque>
 
 namespace iosound {
 namespace ml {
 
+void MSEEstimator::changeMode(bool plates) {
+    m_plates = plates;
+}
+
 void MSEEstimator::pushGiroEntry(const xdk::XDKGiro& giro) {
-    m_giro = giro;
 }
 
 void MSEEstimator::setGestureReceiver(const GestureReceiver& gestureReceiver) {
@@ -19,9 +23,9 @@ void MSEEstimator::pushAccelerationEntry(const xdk::XDKAcceleration& acceleratio
     //std::cout <<  "<Result>:" << result << std::endl; 
     if (!m_hit) {
         if (result > m_acceptanceThreshold && m_gestureReceiver) {
-            //std::cout << "Hit!: " << m_giro.yaw << " " << m_giro.pitch << " " << m_giro.roll << std::endl;
+            //std::cout << "Hit!: " << pressure << std::endl;
             m_hit = true;
-            std::thread([this](){ m_gestureReceiver(); }).detach();
+            std::thread([this](){ m_gestureReceiver(m_plates); }).detach();
             
         }
     } else {
